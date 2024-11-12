@@ -2,7 +2,6 @@ export * from './core/types';
 export * from './core/constants';
 
 // Export browser utils
-export * as imageUtils from './browser/utils/image';
 export * as fileUtils from './browser/utils/file';
 
 // Export appropriate Lambda implementation
