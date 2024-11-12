@@ -1,5 +1,5 @@
 {
-  "name": "lambda-sdk",
+  "name": "@genify/lambda-sdk",
   "version": "1.0.0",
   "description": "Lambda SDK for file uploads and IPFS integration",
   "main": "dist/index.js",
@@ -7,11 +7,22 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "create-fixtures": "ts-node test/fixtures/createFixtures.ts",
-    "pretest": "npm run create-fixtures",
     "test:node": "jest --config jest.node.config.js",
-    "test:browser": "jest --config jest.browser.config.js"
+    "test:browser": "jest --config jest.browser.config.js",
+    "test:utils": "jest --config jest.utils.config.js",
+    "create-fixtures": "ts-node test/fixtures/createFixtures.ts",
+    "pretest": "npm run create-fixtures"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Genify-XYZ/lambda-sdk.git"
+  },
+  "author": "Genify",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Genify-XYZ/lambda-sdk/issues"
+  },
+  "homepage": "https://github.com/Genify-XYZ/lambda-sdk#readme",
   "dependencies": {
     "axios": "^1.7.7",
     "form-data": "^4.0.1"
@@ -20,10 +31,9 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.17.6",
-    "blob-polyfill": "^9.0.20240710",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "ts-jest": "^29.2.5",
-    "typescript": "^5.0.0"
+    "typescript": "^5.2.2"
   }
 }
