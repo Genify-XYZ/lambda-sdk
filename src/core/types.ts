@@ -8,6 +8,8 @@ export interface LambdaConfig {
     uploadBatchURI?: string;
     /** Gateway URL prefix */
     gateway?: string;
+    /** Query endpoint */
+    queryURI?: string;
   }
   
   /**
@@ -55,3 +57,19 @@ export interface LambdaConfig {
     [key: string]: FormDataFile;
   }
   
+  export interface IPFSLink {
+    Name: string;
+    Hash: string;
+    Size: number;
+    Type: number;
+    Target: string;
+  }
+  
+  export interface IPFSObject {
+    Hash: string;
+    Links: IPFSLink[];
+  }
+  
+  export interface IPFSLsResponse {
+    Objects: IPFSObject[];
+  }

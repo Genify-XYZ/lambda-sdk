@@ -12,15 +12,17 @@ import {
 import { DEFAULT_CONFIG, ERROR_MESSAGES } from '../core/constants';
 import { isDirectory, prepareDirectory, cleanupFormData } from './utils/fs';
 import { ProgressTracker, createProgressHandler } from './utils/progress';
+import type { IPFSLsResponse } from '../core/types';
 
 export class Lambda {
   private readonly uploadSingleURI: string;
   private readonly uploadBatchURI: string;
   private readonly gateway: string;
-
+  private readonly queryURI: string;
   constructor(config: LambdaConfig = {}) {
     this.uploadSingleURI = config.uploadSingleURI || DEFAULT_CONFIG.uploadSingleURI;
     this.uploadBatchURI = config.uploadBatchURI || DEFAULT_CONFIG.uploadBatchURI;
+    this.queryURI = config.queryURI || DEFAULT_CONFIG.queryURI;
     this.gateway = config.gateway || DEFAULT_CONFIG.gateway;
   }
 
@@ -169,5 +171,41 @@ export class Lambda {
       return new Error(`${message}: ${error.message}`);
     }
     return new Error(message);
+  }
+
+  /**
+   * List contents of an IPFS directory
+   * @param hash IPFS hash of the directory
+   * @returns Directory contents
+   */
+  async listDirectory(hash: string): Promise<IPFSLsResponse> {
+    try {
+      const response = await axios.post(
+        `${this.queryURI}?arg=${hash}`
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(`Failed to list directory: ${hash}`);
+    }
+  }
+
+  /**
+   * Get simplified directory listing
+   * @param hash IPFS hash of the directory
+   * @returns Array of files with name, hash, and size
+   */
+  async getDirectoryContents(hash: string): Promise<Array<{ name: string; hash: string; size: number; type: number; target: string }>> {
+    const response = await this.listDirectory(hash);
+    if (!response.Objects?.[0]?.Links) {
+      return [];
+    }
+
+    return response.Objects[0].Links.map(link => ({
+      name: link.Name,
+      hash: link.Hash,
+      size: link.Size,
+      type: link.Type,
+      target: link.Target
+    }));
   }
 }

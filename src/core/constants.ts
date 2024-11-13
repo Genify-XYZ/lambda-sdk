@@ -3,6 +3,7 @@
  */
 export const DEFAULT_CONFIG = {
     uploadSingleURI: 'https://lambda.im/upload/api/v0/add',
+    queryURI: 'https://lambda.im/query/api/v0/api/ls',
     uploadBatchURI: 'http://3.0.192.71:5001/api/v0/add?recursive=true&wrap-with-directory=true&pin=true',
     gateway: 'https://lambda.im/lws/',
   };

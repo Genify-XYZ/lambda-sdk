@@ -3,6 +3,7 @@
  */
 export declare const DEFAULT_CONFIG: {
     uploadSingleURI: string;
+    queryURI: string;
     uploadBatchURI: string;
     gateway: string;
 };

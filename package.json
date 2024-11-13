@@ -1,9 +1,12 @@
 {
   "name": "@genify/lambda-sdk",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Lambda SDK for file uploads and IPFS integration",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "jest",

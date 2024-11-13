@@ -15,6 +15,7 @@ class Lambda {
     constructor(config = {}) {
         this.uploadSingleURI = config.uploadSingleURI || constants_1.DEFAULT_CONFIG.uploadSingleURI;
         this.uploadBatchURI = config.uploadBatchURI || constants_1.DEFAULT_CONFIG.uploadBatchURI;
+        this.queryURI = config.queryURI || constants_1.DEFAULT_CONFIG.queryURI;
         this.gateway = config.gateway || constants_1.DEFAULT_CONFIG.gateway;
     }
     /**
@@ -139,6 +140,39 @@ class Lambda {
             return new Error(`${message}: ${error.message}`);
         }
         return new Error(message);
+    }
+    /**
+     * List contents of an IPFS directory
+     * @param hash IPFS hash of the directory
+     * @returns Directory contents
+     */
+    async listDirectory(hash) {
+        try {
+            const response = await axios_1.default.post(`${this.queryURI}?arg=${hash}`);
+            return response.data;
+        }
+        catch (error) {
+            throw new Error(`Failed to list directory: ${hash}`);
+        }
+    }
+    /**
+     * Get simplified directory listing
+     * @param hash IPFS hash of the directory
+     * @returns Array of files with name, hash, and size
+     */
+    async getDirectoryContents(hash) {
+        var _a, _b;
+        const response = await this.listDirectory(hash);
+        if (!((_b = (_a = response.Objects) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.Links)) {
+            return [];
+        }
+        return response.Objects[0].Links.map(link => ({
+            name: link.Name,
+            hash: link.Hash,
+            size: link.Size,
+            type: link.Type,
+            target: link.Target
+        }));
     }
 }
 exports.Lambda = Lambda;
