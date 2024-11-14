@@ -7,9 +7,11 @@ export * as fileUtils from './browser/utils/file';
 // Export appropriate Lambda implementation
 let LambdaImpl;
 
-if (typeof window === 'undefined') {
+if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+  // Node.js environment
   LambdaImpl = require('./node/Lambda').Lambda;
 } else {
+  // Browser environment
   LambdaImpl = require('./browser/Lambda').Lambda;
 }
 
