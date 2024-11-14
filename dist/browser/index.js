@@ -27,18 +27,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Lambda = exports.fileUtils = void 0;
-__exportStar(require("./core/types"), exports);
-__exportStar(require("./core/constants"), exports);
-// Export browser utils
-exports.fileUtils = __importStar(require("./browser/utils/file"));
-// Export appropriate Lambda implementation
-var LambdaImpl;
-if (typeof process !== 'undefined' && process.versions && process.versions.node) {
-    // Node.js environment
-    LambdaImpl = require('./node/Lambda').Lambda;
-}
-else {
-    // Browser environment
-    LambdaImpl = require('./browser/Lambda').Lambda;
-}
-exports.Lambda = LambdaImpl;
+__exportStar(require("../core/types"), exports);
+__exportStar(require("../core/constants"), exports);
+exports.fileUtils = __importStar(require("./utils/file"));
+var Lambda_1 = require("./Lambda");
+Object.defineProperty(exports, "Lambda", { enumerable: true, get: function () { return Lambda_1.Lambda; } });

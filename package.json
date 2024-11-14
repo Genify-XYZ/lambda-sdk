@@ -2,8 +2,17 @@
   "name": "@genify/lambda-sdk",
   "version": "1.0.2",
   "description": "Lambda SDK for file uploads and IPFS integration",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/node/index.js",
+  "browser": "./dist/browser/index.js",
+  "module": "./dist/browser/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "browser": "./dist/browser/index.js",
+      "node": "./dist/node/index.js",
+      "default": "./dist/browser/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
