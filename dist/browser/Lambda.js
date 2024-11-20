@@ -49,6 +49,7 @@ var Lambda = /** @class */ (function () {
         this.uploadSingleURI = config.uploadSingleURI || constants_1.DEFAULT_CONFIG.uploadSingleURI;
         this.uploadBatchURI = config.uploadBatchURI || constants_1.DEFAULT_CONFIG.uploadBatchURI;
         this.gateway = config.gateway || constants_1.DEFAULT_CONFIG.gateway;
+        this.queryURI = config.queryURI || constants_1.DEFAULT_CONFIG.queryURI;
     }
     /**
      * Upload a single file
@@ -136,6 +137,58 @@ var Lambda = /** @class */ (function () {
             return new Error("".concat(message, ": ").concat(error.message));
         }
         return new Error(message);
+    };
+    /**
+     * List contents of an IPFS directory
+     * @param hash IPFS hash of the directory
+     * @returns Directory contents
+     */
+    Lambda.prototype.listDirectory = function (hash) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.queryURI, "?arg=").concat(hash))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response.data];
+                    case 2:
+                        error_2 = _a.sent();
+                        throw this.handleError(error_2, "Failed to list directory: ".concat(hash));
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Get simplified directory listing
+     * @param hash IPFS hash of the directory
+     * @returns Array of files with name, hash, and size
+     */
+    Lambda.prototype.getDirectoryContents = function (hash) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response;
+            var _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0: return [4 /*yield*/, this.listDirectory(hash)];
+                    case 1:
+                        response = _c.sent();
+                        if (!((_b = (_a = response.Objects) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.Links)) {
+                            return [2 /*return*/, []];
+                        }
+                        return [2 /*return*/, response.Objects[0].Links.map(function (link) { return ({
+                                name: link.Name,
+                                hash: link.Hash,
+                                size: link.Size,
+                                type: link.Type,
+                                target: link.Target
+                            }); })];
+                }
+            });
+        });
     };
     return Lambda;
 }());
