@@ -6,7 +6,7 @@ exports.REGEX = exports.ERROR_MESSAGES = exports.FILE_LIMITS = exports.DEFAULT_C
  */
 exports.DEFAULT_CONFIG = {
     uploadSingleURI: 'https://lambda.im/upload/api/v0/add',
-    queryURI: 'https://lambda.im/upload/api/v0/api/ls',
+    queryURI: 'https://lambda.im/upload/api/v0/ls',
     uploadBatchURI: 'http://3.0.192.71:5001/api/v0/add?recursive=true&wrap-with-directory=true&pin=true',
     gateway: 'https://lambda.im/lws/',
 };
