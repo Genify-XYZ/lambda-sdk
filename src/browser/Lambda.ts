@@ -33,7 +33,12 @@ export class Lambda {
       validateFile(file);
 
       const formData = new FormData();
-      formData.append('file', file);
+      const fileName = file.webkitRelativePath ?
+        file.webkitRelativePath.split('/').pop() :
+        file.name
+
+      formData.append('file', file, fileName);
+
       const response = await axios.post(this.uploadSingleURI, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -46,11 +51,18 @@ export class Lambda {
         }
       });
 
+      const responseText = response.data
+      const jsonObjects = responseText.match(/{[^}]+}/g)
+
+      if (!jsonObjects) {
+        throw new Error('Invalid response format')
+      }
+      const fileJson = JSON.parse(jsonObjects[0])
       return {
-        hash: response.data.Hash,
-        url: this.gateway + response.data.Hash,
-        size: response.data.Size,
-        name: file.name
+        hash: fileJson.Hash,
+        url: this.gateway + fileJson.Hash,
+        size: fileJson.Size,
+        name: fileName || ''
       };
     } catch (error) {
       throw this.handleError(error, `Failed to upload file: ${file.name}`);

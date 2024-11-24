@@ -56,14 +56,17 @@ var Lambda = /** @class */ (function () {
      */
     Lambda.prototype.uploadFile = function (file, onProgress) {
         return __awaiter(this, void 0, void 0, function () {
-            var formData, response, error_1;
+            var formData, fileName, response, responseText, jsonObjects, fileJson, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         (0, file_1.validateFile)(file);
                         formData = new FormData();
-                        formData.append('file', file);
+                        fileName = file.webkitRelativePath ?
+                            file.webkitRelativePath.split('/').pop() :
+                            file.name;
+                        formData.append('file', file, fileName);
                         return [4 /*yield*/, axios_1.default.post(this.uploadSingleURI, formData, {
                                 headers: {
                                     'Content-Type': 'multipart/form-data'
@@ -77,11 +80,17 @@ var Lambda = /** @class */ (function () {
                             })];
                     case 1:
                         response = _a.sent();
+                        responseText = response.data;
+                        jsonObjects = responseText.match(/{[^}]+}/g);
+                        if (!jsonObjects) {
+                            throw new Error('Invalid response format');
+                        }
+                        fileJson = JSON.parse(jsonObjects[0]);
                         return [2 /*return*/, {
-                                hash: response.data.Hash,
-                                url: this.gateway + response.data.Hash,
-                                size: response.data.Size,
-                                name: file.name
+                                hash: fileJson.Hash,
+                                url: this.gateway + fileJson.Hash,
+                                size: fileJson.Size,
+                                name: fileName || ''
                             }];
                     case 2:
                         error_1 = _a.sent();
