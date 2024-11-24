@@ -51,13 +51,19 @@ export class Lambda {
         }
       });
 
-      const responseText = response.data
-      const jsonObjects = responseText.match(/{[^}]+}/g)
+      const responseData = response.data;
+      let fileJson;
 
-      if (!jsonObjects) {
-        throw new Error('Invalid response format')
+      if (typeof responseData === 'string') {
+        const jsonObjects = responseData.match(/{[^}]+}/g);
+        if (!jsonObjects) {
+          throw new Error('Invalid response format');
+        }
+        fileJson = JSON.parse(jsonObjects[0]);
+      } else {
+        fileJson = responseData;
       }
-      const fileJson = JSON.parse(jsonObjects[0])
+
       return {
         hash: fileJson.Hash,
         url: this.gateway + fileJson.Hash,

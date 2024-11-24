@@ -56,7 +56,7 @@ var Lambda = /** @class */ (function () {
      */
     Lambda.prototype.uploadFile = function (file, onProgress) {
         return __awaiter(this, void 0, void 0, function () {
-            var formData, fileName, response, responseText, jsonObjects, fileJson, error_1;
+            var formData, fileName, response, responseData, fileJson, jsonObjects, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -80,12 +80,18 @@ var Lambda = /** @class */ (function () {
                             })];
                     case 1:
                         response = _a.sent();
-                        responseText = response.data;
-                        jsonObjects = responseText.match(/{[^}]+}/g);
-                        if (!jsonObjects) {
-                            throw new Error('Invalid response format');
+                        responseData = response.data;
+                        fileJson = void 0;
+                        if (typeof responseData === 'string') {
+                            jsonObjects = responseData.match(/{[^}]+}/g);
+                            if (!jsonObjects) {
+                                throw new Error('Invalid response format');
+                            }
+                            fileJson = JSON.parse(jsonObjects[0]);
                         }
-                        fileJson = JSON.parse(jsonObjects[0]);
+                        else {
+                            fileJson = responseData;
+                        }
                         return [2 /*return*/, {
                                 hash: fileJson.Hash,
                                 url: this.gateway + fileJson.Hash,
